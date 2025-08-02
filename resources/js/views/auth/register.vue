@@ -30,14 +30,15 @@
         />
         <button @click.prevent="submitHandler">enviar</button>
     </form>
-    <h3>{{ token.userToken }}</h3>
 </template>
 
 <script setup>
 import { reactive } from "vue";
 import { useTokenSotre } from "../../stores/token";
+import { useRouter } from "vue-router";
 import axios from "axios";
-const token = useTokenSotre;
+const token = useTokenSotre();
+const router = useRouter();
 const form = reactive({
     name: "",
     email: "",
@@ -48,8 +49,7 @@ const form = reactive({
 const submitHandler = () => {
     axios.post("api/auth/register", form).then((response) => {
         token.userToken = response.data.token;
+        router.push("/");
     });
-    console.log(token.userToken);
-    
 };
 </script>

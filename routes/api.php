@@ -10,3 +10,5 @@ Route::controller(AuthController::class)->group(
         Route::post('/auth/login','authenticate');
     }
 );
+
+Route::post('/auth/logout',[AuthController::class,'deauthenticate'])->middleware('auth:sanctum');

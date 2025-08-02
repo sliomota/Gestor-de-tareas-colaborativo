@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import {ref,reactive} from "vue";
 export const useTokenSotre = defineStore(
     "token",
     () => {
@@ -6,7 +7,6 @@ export const useTokenSotre = defineStore(
         function tokenReset() {
             userToken.value = "";
         }
-        const getToken = computed(() => userToken.value);
         return { userToken, tokenReset };
     },
     { persist: true, }

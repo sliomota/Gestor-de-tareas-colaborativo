@@ -14,12 +14,15 @@
             autocomplete="new-passwor"
             v-model="form.password"
         />
-        <button @click.prevent="submitHandler"></button>
+        <button @click.prevent="submitHandler">Iniciar sesion</button>
     </form>
 </template>
 <script setup>
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+
+const router = useRouter();
 
 const form = reactive({
     email: "",
@@ -27,10 +30,9 @@ const form = reactive({
 });
 
 const submitHandler = () => {
-    axios
-        .post("api/auth/login", form)
-        .then((response) => {
+    axios.post("api/auth/login", form).then((response) => {
         token.userToken = response.data.token;
+        router.push("/");
     });
 };
 </script>

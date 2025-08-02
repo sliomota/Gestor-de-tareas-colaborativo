@@ -22,32 +22,18 @@ class AuthController extends Controller
 
 
 
-        if (Auth::attempt($credentials)) {
-
-            $request->session()->regenerate();
-
-            $token = Auth::user()->createToken($request->email)->plainTextToken;
-
-            return response()->json(["token" => $token]);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(["email" => "Credenciales incorrectas"], 401);
         }
 
-
-
-        return back()->withErrors([
-
-            'email' => 'The provided credentials do not match our records.',
-
-        ])->onlyInput('email');
+        $token = Auth::user()->createToken($request->email)->plainTextToken;
+        return response()->json(["token" => $token]);
     }
 
     public function deauthenticate(Request $request)
     {
         Auth::user()->tokens()->delete();
-        Auth::logout();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
         return response()->json(["email" => "Usuario desautenticado"]);
     }
 
@@ -62,7 +48,6 @@ class AuthController extends Controller
         $validated["password"] = Hash::make($validated['password']);
 
         $user = User::create($validated);
-        auth()->login($user);
         $token = $user->createToken($validated['email'])->plainTextToken;
 
         return response()->json(['user' => $user, 'token' => $token], 201);
