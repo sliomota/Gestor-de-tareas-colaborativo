@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Task extends Model
+class Commentary extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        "status",
-        "title",
-        "description"
+        "commentary"
     ];
 
-    public function commentary()
+    public function task()
     {
-        return $this->hasMany(Commentary::class);
+       return $this->belongsTo(Task::class);
     }
 }

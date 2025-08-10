@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->default("Default");
+            $table->string("title");
+            $table->text("desciption");
+            $table->tinyInteger("staust")->default(0);
+            $table->foreignId("proyect_id")->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('tasks');
     }
 };

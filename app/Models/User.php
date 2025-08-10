@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -49,8 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function groups()
+    public function proyect()
     {
-        $this->belongsToMany(Group::class,"group_user");
+        $this->belongsToMany(Proyect::class, "proyect_user");
     }
 }

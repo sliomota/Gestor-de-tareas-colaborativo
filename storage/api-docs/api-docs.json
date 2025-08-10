@@ -1,0 +1,231 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "TasksApp API",
+        "description": "Documentación de la API de TasksApp",
+        "contact": {
+            "name": "Nombre del contacto",
+            "url": "http://example.com/contact",
+            "email": "contact@example.com"
+        },
+        "license": {
+            "name": "Licencia",
+            "url": "http://example.com/license"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/proyects": {
+            "get": {
+                "tags": [
+                    "Proyects"
+                ],
+                "summary": "Obtener lista de proyectos",
+                "description": "Devuelve una lista de todos los proyectos",
+                "operationId": "4cadd01d8e1bdf8a78ccea77b226fabe",
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "ID del proyecto",
+                                                "type": "integer",
+                                                "format": "int64"
+                                            },
+                                            "nombre": {
+                                                "description": "Nombre del proyecto",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Descripción del proyecto",
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "description": "Fecha de creación",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Fecha de actualización",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Proyects"
+                ],
+                "summary": "Crear un nuevo proyecto",
+                "description": "Crea un nuevo proyecto",
+                "operationId": "5ee45aa25bac97cf99e5176cccc2972c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Nombre del Proyecto"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Descripción del Proyecto"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Proyecto creado exitosamente"
+                    },
+                    "422": {
+                        "description": "Validación fallida"
+                    }
+                }
+            }
+        },
+        "/api/proyects/{id}": {
+            "get": {
+                "tags": [
+                    "Proyects"
+                ],
+                "summary": "Obtener un proyecto por ID",
+                "description": "Devuelve un proyecto específico por su ID",
+                "operationId": "10ed32f4b1a4a63ebcda9a345895f39c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa"
+                    },
+                    "404": {
+                        "description": "Proyecto no encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Proyects"
+                ],
+                "summary": "Actualizar un proyecto por ID",
+                "description": "Actualiza un proyecto específico por su ID",
+                "operationId": "9988c884fb89886adaf7e45386836792",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Nombre del Proyecto"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Descripción del Proyecto"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Proyecto actualizado exitosamente"
+                    },
+                    "404": {
+                        "description": "Proyecto no encontrado"
+                    },
+                    "422": {
+                        "description": "Validación fallida"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Proyects"
+                ],
+                "summary": "Eliminar un proyecto por ID",
+                "description": "Elimina un proyecto específico por su ID",
+                "operationId": "533c8742d372007ab46be854d6949b17",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Proyecto eliminado correctamente"
+                    },
+                    "404": {
+                        "description": "Proyecto no encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "204": {
+                "description": "No hay proyectos"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Proyects",
+            "description": "Proyects"
+        }
+    ]
+}
