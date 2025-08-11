@@ -4,43 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Proyect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\Schema(
+ *     schema="Proyect",
+ *     type="object",
+ *     title="Proyect",
+ *     required={"name"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Sistema de gestión"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Proyecto para administrar tareas internas"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2025-08-11T09:00:00.000000Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-08-11T09:00:00.000000Z"),
+ *     @OA\Property(property="deleted_at", type="string", format="date-time", nullable=true, example=null)
+ * )
+ */
 class ProyectController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
      * @OA\Get(
-     *     path="/api/proyects",
-     *     tags={"Proyects"},
-     *     summary="Obtener lista de proyectos",
-     *     description="Devuelve una lista de todos los proyectos",
+     *     path="/proyects",
+     *     summary="Listar proyectos",
+     *     tags={"Proyectos"},
+     *     security={{"sanctum":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Operación exitosa",
+     *         description="Lista de proyectos",
      *         @OA\JsonContent(
-     *             type="array",
- @OA\Items(
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", format="int64", description="ID del proyecto"),
-     *                 @OA\Property(property="nombre", type="string", description="Nombre del proyecto"),
-     *                 @OA\Property(property="description", type="string", description="Descripción del proyecto"),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", description="Fecha de creación"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", description="Fecha de actualización")
+     *             @OA\Property(property="model", type="array",
+     *                 @OA\Items(ref="#/components/schemas/Proyect")
      *             )
      *         )
-     *         )
      *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="No hay proyectos"
-     *     )
+     *     @OA\Response(response=204, description="No hay proyectos")
      * )
      */
     public function index()
     {
-        $model = Proyect::all();
-
+        $model = Auth::user()->proyects()->get();
         if (!$model->count() > 0) {
             return response()->json(["message" => "No hay proyectos"], 204);
         }
@@ -49,65 +51,64 @@ class ProyectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @OA\Post(
-     *     path="/api/proyects",
-     *     tags={"Proyects"},
+     *     path="/proyects",
      *     summary="Crear un nuevo proyecto",
-     *     description="Crea un nuevo proyecto",
+     *     tags={"Proyectos"},
+     *     security={{"sanctum":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"nombre"},
-     *             @OA\Property(property="nombre", type="string", format="string", example="Nombre del Proyecto"),
-     *             @OA\Property(property="description", type="string", format="string", example="Descripción del Proyecto")
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", example="Sistema de inventario"),
+     *             @OA\Property(property="description", type="string", nullable=true, example="Proyecto para control de stock")
      *         )
      *     ),
      *     @OA\Response(
      *         response=201,
      *         description="Proyecto creado exitosamente",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Proyecto creado exitosamente"),
+     *             @OA\Property(property="model", ref="#/components/schemas/Proyect")
+     *         )
      *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validación fallida"
-     *     )
+     *     @OA\Response(response=422, description="Datos inválidos")
      * )
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "nombre" => "required|string|max:35",
+            "name" => "required|string|max:35",
             "description" => "nullable|string"
         ]);
 
         $model = Proyect::create($validated);
+        Auth::user()->proyects()->attach($model);
 
         return response()->json(["message" => "Proyecto creado exitosamente", "model" => $model], 201);
     }
 
     /**
-     * Display the specified resource.
-     *
      * @OA\Get(
-     *     path="/api/proyects/{id}",
-     *     tags={"Proyects"},
-     *     summary="Obtener un proyecto por ID",
-     *     description="Devuelve un proyecto específico por su ID",
+     *     path="/proyects/{id}",
+     *     summary="Obtener un proyecto",
+     *     tags={"Proyectos"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
+     *         description="ID del proyecto",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Operación exitosa",
+     *         description="Proyecto encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="model", ref="#/components/schemas/Proyect")
+     *         )
      *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Proyecto no encontrado"
-     *     )
+     *     @OA\Response(response=404, description="Proyecto no encontrado")
      * )
      */
     public function show(string $id)
@@ -118,46 +119,41 @@ class ProyectController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @OA\Put(
-     *     path="/api/proyects/{id}",
-     *     tags={"Proyects"},
-     *     summary="Actualizar un proyecto por ID",
-     *     description="Actualiza un proyecto específico por su ID",
+     *     path="/proyects/{id}",
+     *     summary="Actualizar un proyecto",
+     *     tags={"Proyectos"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
+     *         description="ID del proyecto",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"nombre"},
-     *             @OA\Property(property="nombre", type="string", format="string", example="Nombre del Proyecto"),
-     *             @OA\Property(property="description", type="string", format="string", example="Descripción del Proyecto")
+     *             required={"name"},
+     *             @OA\Property(property="name", type="string", example="Sistema de ventas"),
+     *             @OA\Property(property="description", type="string", nullable=true, example="Proyecto para registrar ventas")
      *         )
      *     ),
      *     @OA\Response(
      *         response=202,
-     *         description="Proyecto actualizado exitosamente",
+     *         description="Proyecto actualizado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="model", ref="#/components/schemas/Proyect")
+     *         )
      *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Proyecto no encontrado"
-     *     ),
-     *     @OA\Response(
-     *         response=422,
-     *         description="Validación fallida"
-     *     )
+     *     @OA\Response(response=404, description="Proyecto no encontrado")
      * )
      */
     public function update(Request $request, string $id)
     {
         $model = Proyect::findOrFail($id);
         $validated = $request->validate([
-            "nombre" => "required|string|max:35",
+            "name" => "required|string|max:35",
             "description" => "nullable|string"
         ]);
 
@@ -167,27 +163,20 @@ class ProyectController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
      * @OA\Delete(
-     *     path="/api/proyects/{id}",
-     *     tags={"Proyects"},
-     *     summary="Eliminar un proyecto por ID",
-     *     description="Elimina un proyecto específico por su ID",
+     *     path="/proyects/{id}",
+     *     summary="Eliminar un proyecto",
+     *     tags={"Proyectos"},
+     *     security={{"sanctum":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
+     *         description="ID del proyecto",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(type="integer", example=1)
      *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="Proyecto eliminado correctamente"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Proyecto no encontrado"
-     *     )
+     *     @OA\Response(response=204, description="Proyecto eliminado correctamente"),
+     *     @OA\Response(response=404, description="Proyecto no encontrado")
      * )
      */
     public function destroy(string $id)

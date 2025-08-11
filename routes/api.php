@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProyectController;
 use App\Http\Controllers\TaskController;
 use App\Models\Task;
 
@@ -15,9 +16,5 @@ Route::controller(AuthController::class)->group(
 
 Route::post('/auth/logout', [AuthController::class, 'deauthenticate'])->middleware('auth:sanctum');
 
-Route::controller(TaskController::class)->group(
-    function () {
-        Route::post('task/store', 'store');
-        Route::post('task/update', 'update');
-    }
-)->middleware('auth:sanctum');
+
+Route::apiResource('proyects',ProyectController::class)->middleware('auth:sanctum');

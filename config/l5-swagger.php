@@ -1,5 +1,7 @@
 <?php
 
+use Laravel\Sanctum\Sanctum;
+
 return [
     'default' => 'default',
     'documentations' => [
@@ -174,6 +176,12 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
+            'sanctum' => [
+                'type' => 'apiKey',
+                'description' => 'Ingresa el token en formato: Bearer {token}',
+                'name' => 'Authorization',
+                'in' => 'header',
+            ],
             'securitySchemes' => [
                 /*
                  * Examples of Security schemes

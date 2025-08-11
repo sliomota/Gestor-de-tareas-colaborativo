@@ -20,7 +20,10 @@
 <script setup>
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { useTokenSotre } from "../../stores/token";
 import axios from "axios";
+
+const token = useTokenSotre();
 
 const router = useRouter();
 

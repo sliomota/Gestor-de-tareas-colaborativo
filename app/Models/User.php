@@ -49,8 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function proyect()
+    public function proyects()
     {
-        $this->belongsToMany(Proyect::class, "proyect_user");
+        return $this->belongsToMany(Proyect::class, "proyect_user");
     }
 }

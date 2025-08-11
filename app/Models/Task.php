@@ -14,6 +14,11 @@ class Task extends Model
         "description"
     ];
 
+    public function proyect()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function commentary()
     {
         return $this->hasMany(Commentary::class);
