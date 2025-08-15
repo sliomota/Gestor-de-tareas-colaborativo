@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->text("desciption");
-            $table->tinyInteger("staust")->default(0);
+            $table->text("description");
+            $table->tinyInteger("status")->default(0);
             $table->foreignId("proyect_id")->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

@@ -17,4 +17,12 @@ Route::controller(AuthController::class)->group(
 Route::post('/auth/logout', [AuthController::class, 'deauthenticate'])->middleware('auth:sanctum');
 
 
-Route::apiResource('proyects',ProyectController::class)->middleware('auth:sanctum');
+Route::apiResource('proyects', ProyectController::class)->middleware('auth:sanctum');
+
+Route::apiResource('tasks', TaskController::class)->only(["show"])->middleware('auth:sanctum');
+Route::controller(TaskController::class)->group(
+    function () {
+        Route::post('proyect/{id}/tasks','store');
+        Route::get('proyect/{id}/tasks','index');
+    }
+);
