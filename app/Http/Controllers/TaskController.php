@@ -85,9 +85,18 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id) {}
+
+    /**
+     * Update the specified resource's status in storage.
+     */
+    public function updateStatus(string $id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->status = $task["status"] ? 0 : 1;
+        $task->save();
+
+        return response()->json(["model" => $task], 200);
     }
 
     /**
@@ -95,6 +104,8 @@ class TaskController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Task::destroy($id);
+
+        return response()->json(["message" => "eliminado con exito"], 200);
     }
 }

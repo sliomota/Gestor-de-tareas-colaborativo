@@ -19,10 +19,11 @@ Route::post('/auth/logout', [AuthController::class, 'deauthenticate'])->middlewa
 
 Route::apiResource('proyects', ProyectController::class)->middleware('auth:sanctum');
 
-Route::apiResource('tasks', TaskController::class)->only(["show"])->middleware('auth:sanctum');
+Route::apiResource('tasks', TaskController::class)->except(["store","index"])->middleware('auth:sanctum');
 Route::controller(TaskController::class)->group(
     function () {
-        Route::post('proyect/{id}/tasks','store');
-        Route::get('proyect/{id}/tasks','index');
+        Route::post('proyect/{id}/tasks', 'store');
+        Route::get('proyect/{id}/tasks', 'index');
+        Route::patch('tasks/{id}/status', 'updateStatus');
     }
 );

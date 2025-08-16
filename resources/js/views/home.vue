@@ -7,8 +7,10 @@
 
 <script setup>
 import axios from "axios";
+import { useRouter } from "vue-router";
 import { useTokenSotre } from "../stores/token";
 const token = useTokenSotre();
+const router = useRouter();
 const logoutHandler = () => {
     axios
         .post(
