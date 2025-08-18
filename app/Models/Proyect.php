@@ -20,4 +20,9 @@ class Proyect extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
 }

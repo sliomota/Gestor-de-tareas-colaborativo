@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProyectController;
 use App\Http\Controllers\TaskController;
 use App\Models\Task;
@@ -19,11 +20,15 @@ Route::post('/auth/logout', [AuthController::class, 'deauthenticate'])->middlewa
 
 Route::apiResource('proyects', ProyectController::class)->middleware('auth:sanctum');
 
-Route::apiResource('tasks', TaskController::class)->except(["store","index"])->middleware('auth:sanctum');
+Route::apiResource('tasks', TaskController::class)->except(["store", "index"])->middleware('auth:sanctum');
 Route::controller(TaskController::class)->group(
     function () {
-        Route::post('proyect/{id}/tasks', 'store');
-        Route::get('proyect/{id}/tasks', 'index');
-        Route::patch('tasks/{id}/status', 'updateStatus');
+        Route::post('/proyect/{id}/tasks', 'store');
+        Route::get('/proyect/{id}/tasks', 'index');
+        Route::patch('/tasks/{id}/status', 'updateStatus');
     }
-);
+)->middleware('auth:sanctum');
+
+Route::apiResource('invitation', InvitationController::class)->only(['show', 'store'])->middleware('auth:sanctum');
+
+Route::post('/invitation/accept', [InvitationController::class,'accept'])->middleware('auth:sanctum');

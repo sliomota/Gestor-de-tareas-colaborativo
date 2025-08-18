@@ -112,8 +112,14 @@ const openModal = (id, title, description) => {
 };
 
 const editTaskHandler = () => {
-    axios.patch(`/api/tasks/${modelId.value}`, editTaskForm, opt).then((response) => {
-        console.log(response.data);
-    });
+    axios
+        .patch(`/api/tasks/${modelId.value}`, editTaskForm, opt)
+        .then((response) => {
+            console.log(task.value, "value", modelId.value);
+
+            task.value = task.value.map((c) =>
+                c.id == modelId.value ? response.data.model : c
+            );
+        });
 };
 </script>
