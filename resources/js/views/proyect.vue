@@ -48,6 +48,10 @@
         />
         <button @click="editTaskHandler" class="mx-4">save</button>
     </modal-component>
+    <button class="border solid black" @click="InviteHandler">
+        invitar al proyecto
+    </button>
+    {{ invitationUrl }}
 </template>
 <script setup>
 import axios from "axios";
@@ -67,6 +71,7 @@ const editTaskForm = reactive({
 });
 const modelId = ref("");
 const token = useTokenSotre();
+const invitationUrl = ref("");
 const { id } = defineProps({
     id: String,
 });
@@ -121,5 +126,11 @@ const editTaskHandler = () => {
                 c.id == modelId.value ? response.data.model : c
             );
         });
+};
+
+const InviteHandler = () => {
+    axios.post("/api/invitation/", { proyect_id: id }, opt).then((response) => {
+        invitationUrl.value = response.data.url;
+    });
 };
 </script>
