@@ -21,7 +21,10 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useTokenSotre } from "../../stores/token";
+import { usePendingToken } from "../../stores/pendingToken";
 import axios from "axios";
+
+const pendingToken = usePendingToken();
 
 const token = useTokenSotre();
 
@@ -33,9 +36,12 @@ const form = reactive({
 });
 
 const submitHandler = () => {
-    axios.post("api/auth/login", form).then((response) => {
+    axios.post("/api/auth/login", form).then((response) => {
         token.userToken = response.data.token;
-        router.push("/");
+       if(pendingToken.token){
+        router.push(`/invitation/${pendingToken.token}`);
+       } 
+        router.push("/dashboard");
     });
 };
 </script>

@@ -51,7 +51,9 @@
     <button class="border solid black" @click="InviteHandler">
         invitar al proyecto
     </button>
-    {{ invitationUrl }}
+    <p>
+        {{ invitationUrl }}
+    </p>
 </template>
 <script setup>
 import axios from "axios";

@@ -47,6 +47,6 @@ class InvitationController extends Controller
 
         $invitation->update(['used_at' => now()]);
 
-        return response()->json(["message" => "usuario autenticado exitosamente"], 200);
+        return response()->json(["message" => "usuario añadido exitosamente"], 200);
     }
 }
