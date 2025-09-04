@@ -26,7 +26,7 @@ class InvitationController extends Controller
 
     public function show($token)
     {
-        $invitation = Invitation::where('token', $token)->whereNull('used_at')->where('expirest_at', '>', now())->first();
+        $invitation = Invitation::where('token', $token)->whereNull('used_at')->where('expires_at', '>', now())->first();
 
         if (!$invitation) {
             return response()->json(["message" => "Invitacion expirada o invalida"], 404);
