@@ -7,9 +7,8 @@ const Dashboard = () => import("./views/dashboard.vue");
 const Proyect = () => import("./views/proyect.vue");
 const Invitation = () => import("./views/invitation.vue");
 const routes = [
-    { path: "/", component: Home },
     { path: "/register", component: Register },
-    { path: "/login", component: Login },
+    { path: "/", component: Login },
     {
         path: "/dashboard",
         component: Dashboard,
